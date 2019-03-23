@@ -19,8 +19,8 @@ guessingGame secret
             Guess i
                 | i == secret -> return Win
                 | i > high || i < low -> return (nextTurn low high)
-                | i > secret -> return (nextTurn low (high-1))
-                | otherwise -> return (nextTurn (low+1) high)
+                | i > secret -> return (nextTurn low (i-1))
+                | otherwise -> return (nextTurn (i+1) high)
 
 
 -- Question 2.
