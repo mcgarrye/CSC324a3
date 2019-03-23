@@ -11,16 +11,17 @@ import GameMasterDef
 guessingGame :: MonadGameMaster m => Integer -> m Ending
 guessingGame secret
     | secret < 1 || secret > 100 = error "invalid game"
-    | otherwise = nextTurn 1 100 
-    where nextTurn low high = do
-        req1 <- gmAction low high
-        case req1 of
-            Surrender -> return (Lose secret)
-            Guess i
-                | i == secret -> return Win
-                | i > high || i < low -> return (nextTurn low high)
-                | i > secret -> return (nextTurn low (i-1))
-                | otherwise -> return (nextTurn (i+1) high)
+    | otherwise = nextTurn 1 100
+    where 
+        nextTurn low high = do
+            req1 <- gmAction low high
+            case req1 of
+                Surrender -> return (Lose secret)
+                Guess i
+                    | i == secret -> return Win
+                    | i > high || i < low -> nextTurn low high
+                    | i > secret -> nextTurn low (i-1)
+                    | otherwise -> nextTurn (i+1) high
 
 
 -- Question 2.
@@ -29,13 +30,13 @@ instance Functor FreeGameMaster where
     -- fmap :: (a -> b) -> FreeGameMaster a -> FreeGameMaster b
     -- If you are confident with your Monad instance, you can just write
     -- fmap = liftM
-    fmap f (FreeGameMaster x) = FreeGameMaster (f x)
+    -- fmap f (FreeGameMaster x) = FreeGameMaster (f x)
 
 instance Applicative FreeGameMaster where
     -- pure :: a -> FreeGameMaster a
     -- If you are confident with your Monad instance, you can just write
     -- pure = return
-    pure x = FreeGameMaster x
+    -- pure x = FreeGameMaster x
 
     -- (<*>) :: FreeGameMaster (a -> b) -> FreeGameMaster a -> FreeGameMaster b
     -- If you are confident with your Monad instance, you can just write
