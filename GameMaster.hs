@@ -9,7 +9,7 @@ import GameMasterDef
 -- The game master for the guessing game.  The parameter is the secret number
 -- the player has to guess.
 guessingGame :: MonadGameMaster m => Integer -> m Ending
-guessingGame secret
+guessingGame secretl
     | secret < 1 || secret > 100 = error "invalid game"
     | otherwise = nextTurn 1 100
     where 
@@ -29,23 +29,26 @@ guessingGame secret
 instance Functor FreeGameMaster where
     -- fmap :: (a -> b) -> FreeGameMaster a -> FreeGameMaster b
     -- If you are confident with your Monad instance, you can just write
-    -- fmap = liftM
-    -- fmap f (FreeGameMaster x) = FreeGameMaster (f x)
+    fmap = liftM
 
 instance Applicative FreeGameMaster where
     -- pure :: a -> FreeGameMaster a
     -- If you are confident with your Monad instance, you can just write
-    -- pure = return
-    -- pure x = FreeGameMaster x
+    pure = return
 
     -- (<*>) :: FreeGameMaster (a -> b) -> FreeGameMaster a -> FreeGameMaster b
     -- If you are confident with your Monad instance, you can just write
-    -- (<*>) = ap
+    (<*>) = ap
 
 instance Monad FreeGameMaster where
     -- return :: a -> FreeGameMaster a
+    return a -> Pure a
 
     -- (>>=) :: FreeGameMaster a -> (a -> FreeGameMaster b) -> (FreeGameMaster b)
+    Pure a >>= k = k a
+    (GMAction low high next) >>= k = 
+        case next response
+
 
 instance MonadGameMaster FreeGameMaster where
     -- gmAction :: Integer -> Integer -> FreeGameMaster PlayerMsg
