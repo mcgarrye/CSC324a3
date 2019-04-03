@@ -55,7 +55,7 @@ mainParser = whitespaces *> block <* eof
 			pure (v, e)
 		literal = (fmap Num integer) <|> boolean
 		var = identifier ["if", "then","else", "let", "in", "True", "False"]
-		boolean = (string "True" *> whitespaces *> pure (Bln Bool)) <|> (string "False" *> whitespaces *> pure (Bln Bool))
+		boolean = (string "True" *> whitespaces *> pure (Bln True)) <|> (string "False" *> whitespaces *> pure (Bln False))
 
 
 mainInterp :: Expr -> Either Error Value
